@@ -10,7 +10,9 @@ const seedTodos = [{
         text: 'Todo 1'
     }, {
         _id: new ObjectID(),
-        text: 'Todo 2'
+        text: 'Todo 2',
+        completed: true,
+        completedAt: 333
     }, {
         _id: new ObjectID(),
         text: 'Todo 3'
@@ -144,5 +146,44 @@ describe('GET /todos/:id', () => {
             .expect(404)
             .end(done);
         });
+    });
+
+    describe('PATCH /todos/:id', () => {
+        it('should update todo', (done) => {
+            var id = seedTodos[0]._id.toHexString();
+            var newText = 'Updated text';
+            request(app)
+            .patch(`/todos/${id}`)
+            .send({
+                text: newText,
+                completed: true
+            })
+            .expect(200)
+            .expect((response) => {
+                expect(response.body.todo.text).toBe(newText);
+                expect(response.body.todo.completed).toBe(true);
+                expect(response.body.todo.completedAt).toBeA('number');
+            })
+            .end(done);
+        });
+
+        it('should clear the completedAt when todo is not completed', (done) => {
+            var id = seedTodos[1]._id.toHexString();
+            var newText = 'Updated text';
+            request(app)
+            .patch(`/todos/${id}`)
+            .send({
+                text: newText,
+                completed: false
+            })
+            .expect(200)
+            .expect((response) => {
+                expect(response.body.todo.text).toBe(newText);
+                expect(response.body.todo.completed).toBe(false);
+                expect(response.body.todo.completedAt).toNotExist();
+            })
+            .end(done);
+        });
+
     });
 });
