@@ -27,7 +27,7 @@ app.get('/todos', (req, res) => {
         //Using an object so that we can send additional data in the response
         res.status(200).send({
             todos
-        })
+        });
     }, (err) => {
         res.status(400).send(err);
     });
