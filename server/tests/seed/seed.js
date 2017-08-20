@@ -20,20 +20,30 @@ const seedUsers = [{
 }, {
     _id: userTwoId,
     email: 'sp2@gmail.com',
-    password: 'userTwoPass'
+    password: 'userTwoPass',
+    tokens: [{
+        access: 'auth',
+        token: jwt.sign({
+            _id: userTwoId.toHexString(), 
+            access: 'auth'
+        }, 'abc123').toString()
+    }]
 }];
 
 const seedTodos = [{
     _id: new ObjectID(),
-    text: 'Todo 1'
+    text: 'Todo 1',
+    _creator: userOneId
 }, {
     _id: new ObjectID(),
     text: 'Todo 2',
     completed: true,
-    completedAt: 333
+    completedAt: 333,
+    _creator: userOneId
 }, {
     _id: new ObjectID(),
-    text: 'Todo 3'
+    text: 'Todo 3',
+    _creator: userTwoId
 }];
 
 const populateTodos = (done) => {
