@@ -44,6 +44,7 @@ UserSchema.methods.toJSON = function() {
     return _.pick(userObject, ['_id', 'email']);
 };
 
+// Instance method
 UserSchema.methods.generateAuthToken = function() {
     // Usung a regular function insted of arrow so that we can bind
     // the this keyword which is the document
@@ -64,6 +65,27 @@ UserSchema.methods.generateAuthToken = function() {
     //Saving to database, and returning a promise.
     return user.save().then(() => {
         return token;
+    });
+};
+
+// Model method
+UserSchema.statics.findByToken = function(token) {
+    var User = this; // Binds to the model and not the document
+    var decoded;
+
+    try {
+        decoded = jwt.verify(token, 'abc123');
+    } catch(e) {
+        // return new Promise((resolve, reject) => {
+        //     reject();
+        // })
+        return Promise.reject();
+    }
+
+    return User.findOne({
+        '_id': decoded._id,
+        'tokens.token': token,
+        'tokens.access': 'auth'
     });
 };
 
