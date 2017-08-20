@@ -16,10 +16,6 @@ const port = process.env.PORT
 // body parser middleware
 app.use(bodyParser.json());
 
-app.get('/users/me', authenticate, (req, res) => {
-    res.send(req.user);
-});
-
 app.post('/todos', (req, res) => {
     var todo = new Todo({
         text: req.body.text
@@ -119,6 +115,10 @@ app.post('/users', (req, res) => {
     }).catch((err) => {
         res.status(400).send(err);
     });
+});
+
+app.get('/users/me', authenticate, (req, res) => {
+    res.send(req.user);
 });
 
 app.listen(port, () => {
