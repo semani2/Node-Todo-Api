@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const {ObjectID} = require('mongodb');
 const _ = require('lodash');
+const morgan = require('morgan');
 
 var {mongoose} = require('./db/mongoose.js');
 var {Todo} = require('./models/todo');
@@ -12,6 +13,9 @@ var {authenticate} = require('./middleware/authenticate');
 
 var app = express();
 const port = process.env.PORT
+
+//Logging middleware
+app.use(morgan('combined'))
 
 // body parser middleware
 app.use(bodyParser.json());
